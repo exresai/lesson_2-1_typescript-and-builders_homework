@@ -119,6 +119,8 @@ const ui = { form, list, total, message, workshop, typescriptFree, buildFree, lo
 ui.workshop.disabled = false
 
 // Здесь же скройте или удалите найденный ui.notice после проверки DOM выше.
+ui.notice.remove()
+
 // HW-Б2: задайте ui.logo.src, alt и покажите изображение.
 
 function render(items: Booking[]) {
