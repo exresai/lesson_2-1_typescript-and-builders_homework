@@ -164,6 +164,7 @@ ui.form.addEventListener('submit', (event) => {
   const booking: Booking = {
     id: crypto.randomUUID(),
     name: rawName.trim(),
+    workshop: selectedWorkshop,
     seats,
     status: 'new',
     source: 'web',
