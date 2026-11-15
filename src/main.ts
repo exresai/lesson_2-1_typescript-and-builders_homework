@@ -13,7 +13,7 @@ const bookings: Array<Booking> = [...initialBookings]
 type Result<T> = | { ok: true; value: T } | { ok: false; error: string }
 
 // Проверка из практики уже работает. В базе менять её не требуется.
-function readSeats(raw: FormDataEntryValue | null): Result<number> | null {
+function readSeats(raw: FormDataEntryValue | null): Result<number> {
   if (typeof raw !== 'string' || raw.trim() === '') {
     return {
       ok: false,
@@ -35,11 +35,17 @@ function readSeats(raw: FormDataEntryValue | null): Result<number> | null {
 
 // HW-А2: замените заглушку; нужный результат WorkshopId | null.
 // Для проверки через форму сначала включите список ui.workshop в месте HW-А4.
-function readWorkshop(raw: FormDataEntryValue | null): WorkshopId | null {
-  if (raw == 'typescript' || raw == 'build') {
-    return raw
+function readWorkshop(raw: FormDataEntryValue | null): Result<WorkshopId> {
+  if (raw === 'typescript' || raw === 'build') {
+    return {
+      ok: true,
+      value: raw,
+    }
   }
-  return null
+  return {
+    ok: false,
+    error: 'Выберите занятие.',
+  }
 }
 
 const app = document.querySelector<HTMLDivElement>('#app')
@@ -184,12 +190,12 @@ ui.form.addEventListener('submit', (event) => {
   const seats = seatsResult.value
 
   // HW-А2: прочитайте data.get('workshop') через readWorkshop, обработайте отказ.
-  const selectedWorkshop = readWorkshop(data.get('workshop'))
-
-  if (selectedWorkshop === null) {
-    ui.message.textContent = 'Выберите занятие.'
+  const workshopResult = readWorkshop(data.get('workshop'))
+  if (!workshopResult.ok) {
+    ui.message.textContent = workshopResult.error
     return
   }
+  const selectedWorkshop = workshopResult.value
 
   // HW-А3: сравните число участников с остатком мест выбранного занятия до изменения bookings.
 
