@@ -1,5 +1,5 @@
 import './style.css'
-import type { Booking } from './models/booking'
+import type { Booking, WorkshopId } from './models/booking'
 import { initialBookings } from './data/initial-bookings'
 import { TYPESCRIPT_CAPACITY, BUILD_CAPACITY } from './data/capacities'
 import { countSeats } from './lib/count-seats'
@@ -18,8 +18,10 @@ function readSeats(raw: FormDataEntryValue | null): number | null {
 
 // HW-А2: замените заглушку; нужный результат WorkshopId | null.
 // Для проверки через форму сначала включите список ui.workshop в месте HW-А4.
-function readWorkshop(raw: FormDataEntryValue | null): null {
-  void raw
+function readWorkshop(raw: FormDataEntryValue | null): WorkshopId | null {
+  if (raw == 'typescript' || raw == 'build') {
+    return raw
+  }
   return null
 }
 
@@ -113,6 +115,8 @@ if (!(form instanceof HTMLFormElement) || !(list instanceof HTMLUListElement)
 const ui = { form, list, total, message, workshop, typescriptFree, buildFree, logo, notice }
 
 // HW-А4: сделайте список ui.workshop доступным для выбора уже при проверке А2.
+ui.workshop.disabled = false
+
 // Здесь же скройте или удалите найденный ui.notice после проверки DOM выше.
 // HW-Б2: задайте ui.logo.src, alt и покажите изображение.
 
@@ -148,6 +152,13 @@ ui.form.addEventListener('submit', (event) => {
   }
 
   // HW-А2: прочитайте data.get('workshop') через readWorkshop, обработайте отказ.
+  const selectedWorkshop = readWorkshop(data.get('workshop'))
+
+  if (selectedWorkshop === null) {
+    ui.message.textContent = 'Выберите занятие.'
+    return
+  }
+
   // HW-А3: сравните число участников с остатком мест выбранного занятия до изменения bookings.
 
   const booking: Booking = {
