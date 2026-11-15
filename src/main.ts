@@ -135,6 +135,14 @@ function render(items: Booking[]) {
   })
   ui.total.textContent = String(countSeats(items))
   // HW-А4: обновите ui.typescriptFree и ui.buildFree через общий расчёт.
+
+  ui.typescriptFree.textContent = String(
+    getRemainingSeats(items, 'typescript'),
+  )
+
+  ui.buildFree.textContent = String(
+    getRemainingSeats(items, 'build'),
+  )
 }
 
 ui.form.addEventListener('submit', (event) => {
