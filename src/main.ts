@@ -4,6 +4,7 @@ import { initialBookings } from './data/initial-bookings'
 import { TYPESCRIPT_CAPACITY, BUILD_CAPACITY } from './data/capacities'
 import { countSeats } from './lib/count-seats'
 import { getRemainingSeats } from './lib/availability'
+import workshopsUrl from './assets/workshops.svg'
 // HW-Б1: подключите расчёты из ./lib/availability.
 // HW-Б2: импортируйте ./assets/workshops.svg как URL.
 
@@ -122,6 +123,9 @@ ui.workshop.disabled = false
 ui.notice.remove()
 
 // HW-Б2: задайте ui.logo.src, alt и покажите изображение.
+ui.logo.src = workshopsUrl
+ui.logo.alt = 'Иллюстрация занятий веб-мастерской'
+ui.logo.hidden = false
 
 function render(items: Booking[]) {
   ui.list.replaceChildren()
