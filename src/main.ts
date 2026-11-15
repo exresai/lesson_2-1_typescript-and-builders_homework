@@ -10,12 +10,27 @@ import workshopsUrl from './assets/workshops.svg'
 
 const bookings: Array<Booking> = [...initialBookings]
 
+type Result<T> = | { ok: true; value: T } | { ok: false; error: string }
+
 // Проверка из практики уже работает. В базе менять её не требуется.
-function readSeats(raw: FormDataEntryValue | null): number | null {
-  if (typeof raw !== 'string' || raw.trim() === '') return null
+function readSeats(raw: FormDataEntryValue | null): Result<number> | null {
+  if (typeof raw !== 'string' || raw.trim() === '') {
+    return {
+      ok: false,
+      error: 'Введите целое число участников от 1 до 5.',
+    }
+  }
   const seats = Number(raw)
-  if (!Number.isInteger(seats) || seats < 1 || seats > 5) return null
-  return seats
+  if (!Number.isInteger(seats) || seats < 1 || seats > 5) {
+    return {
+      ok: false,
+      error: 'Введите целое число участников от 1 до 5.',
+    }
+  }
+  return {
+    ok: true,
+    value: seats,
+  }
 }
 
 // HW-А2: замените заглушку; нужный результат WorkshopId | null.
@@ -161,11 +176,12 @@ ui.form.addEventListener('submit', (event) => {
     return
   }
 
-  const seats = readSeats(data.get('seats'))
-  if (seats === null) {
-    ui.message.textContent = 'Введите целое число участников от 1 до 5.'
+  const seatsResult = readSeats(data.get('seats'))
+  if (!seatsResult.ok) {
+    ui.message.textContent = seatsResult.error
     return
   }
+  const seats = seatsResult.value
 
   // HW-А2: прочитайте data.get('workshop') через readWorkshop, обработайте отказ.
   const selectedWorkshop = readWorkshop(data.get('workshop'))
