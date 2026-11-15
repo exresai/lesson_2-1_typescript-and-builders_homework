@@ -129,7 +129,8 @@ function render(items: Booking[]) {
     const details = document.createElement('span')
     title.textContent = booking.name
     // HW-А4: добавьте название занятия в подробности карточки.
-    details.textContent = `${booking.seats} участн. · ${booking.status === 'confirmed' ? 'Подтверждена' : 'Новая'} · ${booking.source}`
+    const workshopName = booking.workshop === 'typescript' ? 'TypeScript' : 'Сборка проекта'
+    details.textContent = `${workshopName} · ${booking.seats} участн. · ${booking.status === 'confirmed' ? 'Подтверждена' : 'Новая'} · ${booking.source}`
     item.append(title, details)
     ui.list.append(item)
   })
